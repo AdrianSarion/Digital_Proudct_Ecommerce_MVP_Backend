@@ -1,62 +1,134 @@
-<p align="center">
-  <a href="https://www.medusajs.com">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://user-images.githubusercontent.com/59018053/229103275-b5e482bb-4601-46e6-8142-244f531cebdb.svg">
-    <source media="(prefers-color-scheme: light)" srcset="https://user-images.githubusercontent.com/59018053/229103726-e5b529a3-9b3f-4970-8a1f-c6af37f087bf.svg">
-    <img alt="Medusa logo" src="https://user-images.githubusercontent.com/59018053/229103726-e5b529a3-9b3f-4970-8a1f-c6af37f087bf.svg">
-    </picture>
-  </a>
-</p>
-<h1 align="center">
-  Medusa
-</h1>
+# Digital Product Backend (Medusa Server)
 
-<h4 align="center">
-  <a href="https://docs.medusajs.com">Documentation</a> |
-  <a href="https://www.medusajs.com">Website</a>
-</h4>
+This is the backend server for the Digital Product e-commerce system, powered by Medusa commerce engine.
 
-<p align="center">
-  Building blocks for digital commerce
-</p>
-<p align="center">
-  <a href="https://github.com/medusajs/medusa/blob/master/CONTRIBUTING.md">
-    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat" alt="PRs welcome!" />
-  </a>
-    <a href="https://www.producthunt.com/posts/medusa"><img src="https://img.shields.io/badge/Product%20Hunt-%231%20Product%20of%20the%20Day-%23DA552E" alt="Product Hunt"></a>
-  <a href="https://discord.gg/xpCwq3Kfn8">
-    <img src="https://img.shields.io/badge/chat-on%20discord-7289DA.svg" alt="Discord Chat" />
-  </a>
-  <a href="https://twitter.com/intent/follow?screen_name=medusajs">
-    <img src="https://img.shields.io/twitter/follow/medusajs.svg?label=Follow%20@medusajs" alt="Follow @medusajs" />
-  </a>
-</p>
+## Features
 
-## Compatibility
+- Complete e-commerce functionality
+- Payment processing with Stripe
+- Digital product support
+- Order management
+- Storefront and admin API endpoints
 
-This starter is compatible with versions >= 2 of `@medusajs/medusa`. 
+## Prerequisites
 
-## Getting Started
+- Node.js 16 or later
+- PostgreSQL database
+- Stripe account (for payment processing)
 
-Visit the [Quickstart Guide](https://docs.medusajs.com/learn/installation) to set up a server.
+## Installation
 
-Visit the [Docs](https://docs.medusajs.com/learn/installation#get-started) to learn more about our system requirements.
+1. Clone the repository (if not already done)
+2. Navigate to the backend directory:
 
-## What is Medusa
+```bash
+cd Medusa_Digital_Product_Backend
+```
 
-Medusa is a set of commerce modules and tools that allow you to build rich, reliable, and performant commerce applications without reinventing core commerce logic. The modules can be customized and used to build advanced ecommerce stores, marketplaces, or any product that needs foundational commerce primitives. All modules are open-source and freely available on npm.
+3. Install dependencies:
 
-Learn more about [Medusa’s architecture](https://docs.medusajs.com/learn/introduction/architecture) and [commerce modules](https://docs.medusajs.com/learn/fundamentals/modules/commerce-modules) in the Docs.
+```bash
+npm install
+# or
+yarn install
+```
 
-## Community & Contributions
+4. Set up environment variables by creating a `.env` file in the root directory:
 
-The community and core team are available in [GitHub Discussions](https://github.com/medusajs/medusa/discussions), where you can ask for support, discuss roadmap, and share ideas.
+```
+# Database configuration
+DATABASE_URL=postgres://username:password@localhost/medusa_db
 
-Join our [Discord server](https://discord.com/invite/medusajs) to meet other community members.
+# Medusa server configuration
+MEDUSA_ADMIN_ONBOARDING_TYPE=default
+STORE_CORS=http://localhost:8000,http://localhost:3000
+ADMIN_CORS=http://localhost:5173,http://localhost:9000
+AUTH_CORS=http://localhost:5173,http://localhost:9000,http://localhost:8000
 
-## Other channels
+# Security
+JWT_SECRET=your_jwt_secret_here
+COOKIE_SECRET=your_cookie_secret_here
 
-- [GitHub Issues](https://github.com/medusajs/medusa/issues)
-- [Twitter](https://twitter.com/medusajs)
-- [LinkedIn](https://www.linkedin.com/company/medusajs)
-- [Medusa Blog](https://medusajs.com/blog/)
+# Stripe integration
+STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key_here
+STRIPE_WEBHOOK_SECRET=whsec_your_stripe_webhook_secret_here
+```
+
+5. Create and seed the database:
+
+```bash
+npm run build
+npm run seed
+```
+
+## Running the Application
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+The Medusa backend will be available at [http://localhost:9000](http://localhost:9000).
+
+To start the Medusa admin dashboard:
+
+```bash
+npm run start:admin
+```
+
+The admin dashboard will be available at [http://localhost:7000](http://localhost:7000).
+
+## API Endpoints
+
+The Medusa server provides two primary API segments:
+
+- **Store API** (`/store/*`): Used by the storefront
+- **Admin API** (`/admin/*`): Used by the admin dashboard
+
+### Key Endpoints
+
+#### Store API
+
+- `GET /store/products`: Get all products
+- `GET /store/products/:id`: Get a specific product
+- `POST /store/carts`: Create a cart
+- `POST /store/carts/:id/line-items`: Add items to a cart
+- `POST /store/carts/:id/payment-sessions`: Initialize payment for a cart
+
+#### Admin API
+
+- `GET /admin/products`: Get all products
+- `POST /admin/products`: Create a product
+- `GET /admin/orders`: Get all orders
+- `GET /admin/orders/:id`: Get a specific order
+
+## Digital Product Configuration
+
+To mark a product as a digital product:
+
+1. Log in to the admin dashboard
+2. Navigate to Products
+3. Edit the desired product
+4. In the "Metadata" section, add a key `is_digital` with the value `true`
+5. Save the product
+
+## Stripe Configuration
+
+This backend uses Stripe for payment processing. The configuration is done in `medusa-config.ts` file. Important settings:
+
+- Set your Stripe API key in the `.env` file
+- Configure webhook settings to handle payment events
+- Set up a webhook URL in your Stripe dashboard pointing to `http://your-domain/hooks/payment/stripe_stripe`
+
+## Integration with Webhook Server
+
+The backend interacts with a separate webhook server for digital product key management. This is handled through API calls when orders are completed.
+
+## Troubleshooting
+
+### Common Issues
+
+- **Database connection errors**: Check your DATABASE_URL in the .env file
+- **CORS errors**: Ensure your CORS settings in .env include all frontend domains
+- **Stripe issues**: Verify your Stripe API keys and webhook configuration

@@ -25,33 +25,7 @@ module.exports = defineConfig({
               apiKey: process.env.STRIPE_SECRET_KEY,
               webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
               capture: true,
-              stripePubKey: process.env.NEXT_PUBLIC_STRIPE_KEY,
-              automatic_payment_methods: true,
-              payment_method_types: ["card"],
-              payment_method_options: {
-                card: {
-                  enabled_payments: ["card"],
-                  preferred_networks: ["visa", "mastercard"],
-                },
-              },
-              payment_intent_data: {
-                capture_method: "manual",
-              },
-              billing_address_collection: "auto",
-              shipping_address_collection: "auto",
-              shipping_options: [
-                {
-                  id: "standard_shipping",
-                  amount: 1000,
-                  currency: "usd",
-                  delivery_estimate: {
-                    minimum: 7,
-                    maximum: 14,
-                    unit: "day",
-                  },
-                },
-                
-              ],
+              automatic_payment_methods: true
             },
           },
         ],
